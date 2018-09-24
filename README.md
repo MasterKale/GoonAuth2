@@ -14,9 +14,20 @@ Install dependencies via the included **Pipfile**:
 
 	pipenv install
 
-There are a couple of values you'll need to update before the server will work. First, update `REDIS_HOST`, `REDIS_PORT`, and `REDIS_DB_NUM` to point to whatever Redis server you want to use. The only things stored in the database are short-lived `key:value` pairs that automatically expire in `HASH_LIFESPAN_MINS * 60` seconds.
+Several environment variables can be set to specify a Redis instance to use:
 
-You'll also want to set values for the following strings: `COOKIE_SESSIONID`, `COOKIE_SESSIONHASH`, `COOKIE_BBUSERID`, and `COOKIE_BBPASSWORD`. I opted to create an accompanying `local_settings.py` file and define them within that, but feel free to specify them as you wish.
+- `REDIS_HOST` (default: **localhost**)
+- `REDIS_PORT` (default: **6379**)
+- `REDIS_DB_NUM` (default: **1**)
+
+The only things stored in the database are short-lived `key:value` pairs that automatically expire in `HASH_LIFESPAN_MINS * 60` seconds. By default hashes expire in **five minutes**.
+
+The following values will also need to be set so that the server can access SA profiles:
+
+- `COOKIE_SESSIONID`
+- `COOKIE_SESSIONHASH`
+- `COOKIE_BBUSERID`
+- `COOKIE_BBPASSWORD`.
 
 These four values need to be taken from an existing logged-in user's cookies:
 
@@ -24,7 +35,7 @@ These four values need to be taken from an existing logged-in user's cookies:
 
 Once everything is in place, you can start the server using `gunicorn`:
 
-	gunicorn server:app
+	gunicorn src.server:app
 
 ## Usage
 
