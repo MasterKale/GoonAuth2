@@ -2,12 +2,17 @@
 
 GoonAuth2 is a REST API service that can be used to authorize membership in the Something Is Awful internet forum.
 
+## Requirements
+
+- Pipenv
+- Python3 (3.4+)
+- Redis (v2.8.4)
+
 ## Installation
 
-The service is powered by **Python 3** (v3.4.3) and **Redis** (v2.8.4). Python dependencies include **Falcon**, **redis-py**, **requests**, and **gunicorn**. You can install all of these dependencies via the included `requirements.txt`:
+Install dependencies via the included **Pipfile**:
 
-	virtualenv .
-	pip install -r requirements.txt
+	pipenv install
 
 There are a couple of values you'll need to update before the server will work. First, update `REDIS_HOST`, `REDIS_PORT`, and `REDIS_DB_NUM` to point to whatever Redis server you want to use. The only things stored in the database are short-lived `key:value` pairs that automatically expire in `HASH_LIFESPAN_MINS * 60` seconds.
 

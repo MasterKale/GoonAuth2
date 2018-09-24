@@ -3,6 +3,10 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 name = "pypi"
 
+[scripts]
+pwd = "which python"
+test = "python -m unittest discover -s src/tests"
+
 [packages]
 falcon = "==0.3.0"
 gunicorn = "*"
