@@ -4,3 +4,4 @@ include/
 lib/
 pip-selfcheck.json
 local_settings.py
+.DS_Store
