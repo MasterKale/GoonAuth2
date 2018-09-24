@@ -1,32 +1,32 @@
 import json
 import re
+import os
 
 import falcon
 import redis
 import requests
 
 import helpers
-from local_settings import COOKIE_SESSIONID, COOKIE_SESSIONHASH, COOKIE_BBUSERID, COOKIE_BBPASSWORD
 
 """
 Settings
 """
 
 # The number of minutes hashes are good for before they're deleted
-HASH_LIFESPAN_MINS = 5
-# A URL to look up SA users by their username
-SA_PROFILE_URL = 'http://forums.somethingawful.com/member.php?action=getinfo&username='
+HASH_LIFESPAN_MINS = os.getenv('HASH_LIFESPAN_MINS', 5)
 # Cookies we'll need to spoof before we can verify a user's profile
 SA_COOKIES = {
-    'sessionid': COOKIE_SESSIONID,
-    'sessionhash': COOKIE_SESSIONHASH,
-    'bbuserid': COOKIE_BBUSERID,
-    'bbpassword': COOKIE_BBPASSWORD
+    'sessionid': os.getenv('COOKIE_SESSIONID'),
+    'sessionhash': os.getenv('COOKIE_SESSIONHASH'),
+    'bbuserid': os.getenv('COOKIE_BBUSERID'),
+    'bbpassword': os.getenv('COOKIE_BBPASSWORD'),
 }
-REDIS_HOST = 'localhost'
-REDIS_PORT = 6379
-REDIS_DB_NUM = 1
+REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
+REDIS_PORT = os.getenv('REDIS_PORT', 6379)
+REDIS_DB_NUM = os.getenv('REDIS_DB_NUM', 1)
 
+# A URL to look up SA users by their username
+SA_PROFILE_URL = 'http://forums.somethingawful.com/member.php?action=getinfo&username='
 
 """
 Begin Server
