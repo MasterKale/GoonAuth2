@@ -3,7 +3,7 @@ import json
 import uuid
 
 
-def get_json(req):
+def get_json(req: falcon.Request) -> dict:
     """
     Turn a request stream into a JSON dictionary
     """
@@ -22,7 +22,7 @@ def get_json(req):
     return raw_json
 
 
-def get_username(body):
+def get_username(body: dict) -> str:
     """
     Pass in the request body (the output from json.loads()) and check for a username
     """
@@ -38,7 +38,7 @@ def get_username(body):
     return body['username'].replace(' ', '%20')
 
 
-def get_hash():
+def get_hash() -> str:
     """
     Return a 32-character long random string
     """
