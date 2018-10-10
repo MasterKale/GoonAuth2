@@ -6,6 +6,7 @@ name = "pypi"
 [scripts]
 test = "python -m unittest discover -s src/tests"
 lint = "flake8"
+start = "gunicorn src.server:app --reload"
 
 [packages]
 falcon = "==0.3.0"
