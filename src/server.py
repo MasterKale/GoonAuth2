@@ -6,7 +6,7 @@ import falcon
 import redis
 import requests
 
-import helpers
+from . import helpers
 
 """
 Settings
@@ -21,9 +21,9 @@ SA_COOKIES = {
     'bbuserid': os.getenv('COOKIE_BBUSERID'),
     'bbpassword': os.getenv('COOKIE_BBPASSWORD'),
 }
-REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
-REDIS_PORT = os.getenv('REDIS_PORT', 6379)
-REDIS_DB_NUM = os.getenv('REDIS_DB_NUM', 1)
+# URL in the following format: redis://[username:password]@localhost:6379.
+# DB number can be specified by updating "0" below
+REDIS_URL = os.getenv('REDIS_URL', '') + '/0'
 
 # A URL to look up SA users by their username
 SA_PROFILE_URL = 'http://forums.somethingawful.com/member.php?action=getinfo&username='
@@ -33,11 +33,7 @@ Begin Server
 """
 
 # Connect to the Redis DB (and automatically decode values because they're all going to be strings)
-redis_db = redis.StrictRedis(
-    host=REDIS_HOST,
-    port=REDIS_PORT,
-    db=REDIS_DB_NUM,
-    decode_responses=True)
+redis_db = redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
 
 
 class RequireJSON(object):
