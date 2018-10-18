@@ -20,7 +20,7 @@ class GetHashTestCase(unittest.TestCase):
 
     def test_contains_only_numbers_and_letters(self):
         returned = get_hash()
-        regex_alpha_num = re.compile("^[a-zA-Z0-9]*$")
+        regex_alpha_num = re.compile('^[a-zA-Z0-9]*$')
         self.assertTrue(regex_alpha_num.match(returned) is not None)
 
 
@@ -30,7 +30,7 @@ class GetJsonTestCase(unittest.TestCase):
 
     def setUp(self):
         # Fake a data stream Falcon prepares from an HTTP request
-        self.stream.decode = MagicMock(return_value=json.dumps({"foo": "bar"}))
+        self.stream.decode = MagicMock(return_value=json.dumps({'foo': 'bar'}))
         # Prepare a Falcon-request-like mock value
         self.req.stream.read = MagicMock(return_value=self.stream)
 
@@ -40,7 +40,7 @@ class GetJsonTestCase(unittest.TestCase):
 
     def test_returns_json_as_dict(self):
         returned = get_json(self.req)
-        self.assertDictEqual({"foo": "bar"}, returned)
+        self.assertDictEqual({'foo': 'bar'}, returned)
 
     def test_returns_400_on_empty_body(self):
         self.req.stream.read = MagicMock(return_value=None)
@@ -50,7 +50,7 @@ class GetJsonTestCase(unittest.TestCase):
     def test_returns_400_with_reason(self):
         self.stream.decode = MagicMock(side_effect=ValueError)
         with self.assertRaisesRegex(
-            expected_regex="JSON-encoded body", expected_exception=falcon.HTTPBadRequest,
+            expected_regex='JSON-encoded body', expected_exception=falcon.HTTPBadRequest,
         ):
             get_json(self.req)
 

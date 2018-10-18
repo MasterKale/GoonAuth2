@@ -15,32 +15,32 @@ class ServerTestCase(testing.TestBase):
 class GenerateHashTestCase(ServerTestCase):
     def setUp(self):
         super(GenerateHashTestCase, self).setUp()
-        self.url = "/v1/generate_hash/"
+        self.url = '/v1/generate_hash/'
 
     def test_require_json(self):
         resp = self.simulate_request(
             self.url,
-            method="POST",
+            method='POST',
             headers={
-                "Content-Type": "multipart/form-data"
+                'Content-Type': 'multipart/form-data'
             },
-            body="",
-            decode="utf-8",
+            body='',
+            decode='utf-8',
         )
         resp = json.loads(resp)
-        self.assertEqual(resp["title"], "Unsupported media type")
-        self.assertEqual(resp["description"], "This API only supports JSON-encoded requests")
+        self.assertEqual(resp['title'], 'Unsupported media type')
+        self.assertEqual(resp['description'], 'This API only supports JSON-encoded requests')
 
     def test_generate_hash_require_username(self):
         resp = self.simulate_request(
             self.url,
-            method="POST",
+            method='POST',
             headers={
-                "Content-Type": "application/json",
+                'Content-Type': 'application/json',
             },
             body=json.dumps({}),
-            decode="utf-8",
+            decode='utf-8',
         )
         resp = json.loads(resp)
-        self.assertEqual(resp["title"], "Missing parameter")
-        self.assertEqual(resp["description"], "The \"username\" parameter is required.")
+        self.assertEqual(resp['title'], 'Missing parameter')
+        self.assertEqual(resp['description'], 'The \'username\' parameter is required.')
