@@ -19,6 +19,7 @@ six = "*"
 [dev-packages]
 "flake8" = "*"
 "flake8-quotes" = "*"
+mockredispy = "*"
 
 [requires]
 python_version = "3.6"
