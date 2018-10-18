@@ -1,8 +1,7 @@
 from falcon import testing
-import falcon
 import json
 
-from src import server, helpers
+from src import server
 
 
 class ServerTestCase(testing.TestBase):
@@ -43,4 +42,4 @@ class GenerateHashTestCase(ServerTestCase):
         )
         resp = json.loads(resp)
         self.assertEqual(resp['title'], 'Missing parameter')
-        self.assertEqual(resp['description'], 'The \'username\' parameter is required.')
+        self.assertEqual(resp['description'], 'The "username" parameter is required.')
