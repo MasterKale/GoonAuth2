@@ -50,10 +50,31 @@ class GetJsonTestCase(unittest.TestCase):
     def test_returns_400_with_reason(self):
         self.stream.decode = MagicMock(side_effect=ValueError)
         with self.assertRaisesRegex(
-            expected_regex='JSON-encoded body', expected_exception=falcon.HTTPBadRequest,
+            expected_regex='JSON-encoded body',
+            expected_exception=falcon.HTTPBadRequest,
         ):
             get_json(self.req)
 
 
 class GetUsernameTestCase(unittest.TestCase):
-    pass
+    def test_returns_str(self):
+        returned = get_username({'username': 'foobar'})
+        self.assertEqual(type(returned), str)
+
+    def test_returns_username_with_encoded_spaces(self):
+        returned = get_username({'username': 'foo bar'})
+        self.assertEqual(returned, 'foo%20bar')
+
+    def test_raises_400_on_missing_username(self):
+        with self.assertRaisesRegex(
+            expected_regex='username',
+            expected_exception=falcon.HTTPMissingParam,
+        ):
+            get_username({})
+
+    def test_raises_400_on_empty_username(self):
+        with self.assertRaisesRegex(
+            expected_regex='Username cannot be blank',
+            expected_exception=falcon.HTTPInvalidParam,
+        ):
+            get_username({'username': ''})
