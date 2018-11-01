@@ -5,3 +5,6 @@ lib/
 pip-selfcheck.json
 local_settings.py
 .DS_Store
+.coverage
+htmlcov
+.env

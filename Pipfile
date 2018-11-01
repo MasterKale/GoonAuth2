@@ -5,6 +5,9 @@ name = "pypi"
 
 [scripts]
 test = "python -m unittest discover -s src/tests"
+test-coverage = "coverage run -m unittest discover -s src/tests"
+test-report = "coverage report"
+test-report-html = "coverage html"
 lint = "flake8"
 start = "gunicorn src.server:app --reload"
 
@@ -15,10 +18,11 @@ python-mimeparse = "*"
 redis = "*"
 requests = "*"
 six = "*"
+coverage = "*"
 
 [dev-packages]
-"flake8" = "*"
-"flake8-quotes" = "*"
+flake8 = "*"
+flake8-quotes = "*"
 mockredispy = "*"
 
 [requires]
