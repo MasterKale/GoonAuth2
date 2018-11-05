@@ -36,23 +36,6 @@ Begin Server
 redis_db = redis.StrictRedis.from_url(REDIS_URL, decode_responses=True)
 
 
-class RequireJSON(object):
-    """
-    The API is only intended to handle application/json requests and responses
-    """
-    def process_request(self, req, resp):
-        if not req.client_accepts_json:
-            raise falcon.HTTPNotAcceptable(
-                'This API only supports JSON-encoded responses'
-            )
-
-        if req.method in ['POST']:
-            if 'application/json' not in req.content_type:
-                raise falcon.HTTPUnsupportedMediaType(
-                    'This API only supports JSON-encoded requests'
-                )
-
-
 class GenerateHashResource:
     """
     Generate a unique identifier that a goon can post to their profile to verify their identity
@@ -102,7 +85,6 @@ class ValidateUserResource:
 
 
 app = falcon.API(middleware=[
-    RequireJSON()
 ])
 generate_hash = GenerateHashResource()
 validate_user = ValidateUserResource()
