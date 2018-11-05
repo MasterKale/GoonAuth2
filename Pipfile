@@ -12,7 +12,7 @@ lint = "flake8"
 start = "gunicorn src.server:app --reload"
 
 [packages]
-falcon = "==0.3.0"
+falcon = "*"
 gunicorn = "*"
 python-mimeparse = "*"
 redis = "*"
