@@ -68,7 +68,7 @@ class GenerateHashResource:
             redis_db.setex(username, HASH_LIFESPAN_MINS * 60, user_hash)
 
         resp.status = falcon.HTTP_OK
-        resp.body = json.dumps({'hash': user_hash})
+        resp.body = json.dumps({'hash': str(user_hash)})
 
 
 class ValidateUserResource:
