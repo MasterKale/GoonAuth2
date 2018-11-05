@@ -1,10 +1,18 @@
 import json
 from unittest.mock import patch
+import falcon
 from falcon import testing
 
 from src.tests import mocks
 
 from src import server
+
+req_params = {
+    'headers': {
+        'Content-Type': 'application/json'
+    },
+    'decode': 'utf-8',
+}
 
 
 class ServerTestCase(testing.TestBase):
@@ -35,15 +43,27 @@ class GenerateHashTestCase(ServerTestCase):
         self.assertEqual(resp['title'], 'Unsupported media type')
         self.assertEqual(resp['description'], 'This API only supports JSON-encoded requests')
 
+    def test_client_must_accept_json(self):
+        # TODO: Fix this test to fail after overhaul. Falcon 0.3.0 isn't raising during testing
+        #       for some reason
+        with self.assertRaises(falcon.HTTPNotAcceptable):
+            self.simulate_request(
+                self.url,
+                method='POST',
+                headers={
+                    'Content-Type': 'application/json',
+                    'Accept': 'text/plain',
+                },
+                body=json.dumps({'username': 'foobar'}),
+                decode='utf-8',
+            )
+
     def test_generate_hash_require_username(self):
         resp = self.simulate_request(
             self.url,
             method='POST',
-            headers={
-                'Content-Type': 'application/json',
-            },
             body=json.dumps({}),
-            decode='utf-8',
+            **req_params,
         )
         resp = json.loads(resp)
         self.assertEqual(resp['title'], 'Missing parameter')
@@ -53,11 +73,29 @@ class GenerateHashTestCase(ServerTestCase):
         resp = self.simulate_request(
             self.url,
             method='POST',
-            headers={
-                'Content-Type': 'application/json',
-            },
             body=json.dumps({'username': 'foobar'}),
-            decode='utf-8',
+            **req_params,
         )
         resp = json.loads(resp)
         self.assertIsNotNone(resp['hash'])
+
+    def test_returns_same_hash_for_same_username(self):
+        username = 'foobar'
+        resp1 = self.simulate_request(
+            self.url,
+            method='POST',
+            body=json.dumps({'username': username}),
+            **req_params,
+        )
+        resp1 = json.loads(resp1)
+
+        resp2 = self.simulate_request(
+            self.url,
+            method='POST',
+            body=json.dumps({'username': username}),
+            **req_params,
+        )
+        resp2 = json.loads(resp2)
+
+        self.assertEqual(resp1['hash'], resp2['hash'])
+
