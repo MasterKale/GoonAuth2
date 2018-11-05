@@ -18,11 +18,11 @@ python-mimeparse = "*"
 redis = "*"
 requests = "*"
 six = "*"
-coverage = "*"
 
 [dev-packages]
 flake8 = "*"
 flake8-quotes = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.6"
