@@ -1,7 +1,6 @@
 import json
 from unittest.mock import patch
 
-import falcon
 from falcon import testing
 import requests
 
@@ -24,13 +23,12 @@ class ServerTestCase(testing.TestCase):
         self.api = server.app
 
 
-@patch('src.server.redis_db', mocks.redis_db)
-class GenerateHashTestCase(ServerTestCase):
+class RequireJSONMiddlewareTestCase(ServerTestCase):
     def setUp(self):
-        super(GenerateHashTestCase, self).setUp()
+        super(RequireJSONMiddlewareTestCase, self).setUp()
         self.url = '/v1/generate_hash/'
 
-    def test_require_json(self):
+    def test_require_json_requests(self):
         resp = self.simulate_post(
             self.url,
             headers={
@@ -38,22 +36,16 @@ class GenerateHashTestCase(ServerTestCase):
             },
             body='',
         )
-        self.assertEqual(resp.status_code, 400)
-        self.assertEqual(resp.json['title'], 'JSON Error')
+        self.assertEqual(resp.status_code, 415)
+        self.assertEqual(resp.json['title'], 'Unsupported media type')
+        self.assertEqual(resp.json['description'], 'This API only supports JSON-encoded requests')
 
-    def test_client_must_accept_json(self):
-        # TODO: Verify this test to fail after overhaul. self.simulate_request isn't raising during
-        #       testing for some reason
-        # with self.assertRaises(falcon.HTTPNotAcceptable):
-        #     self.simulate_post(
-        #         self.url,
-        #         headers={
-        #             'Content-Type': 'application/json',
-        #             'Accept': 'text/plain',
-        #         },
-        #         body=json.dumps({'username': 'foobar'}),
-        #     )
-        pass
+
+@patch('src.server.redis_db', mocks.redis_db)
+class GenerateHashTestCase(ServerTestCase):
+    def setUp(self):
+        super(GenerateHashTestCase, self).setUp()
+        self.url = '/v1/generate_hash/'
 
     def test_generate_hash_require_username(self):
         resp = self.simulate_post(
@@ -108,19 +100,18 @@ class ValidateUserResourceTestCase(ServerTestCase):
         self.assertEqual(resp.json['title'], 'Missing parameter')
         self.assertEqual(resp.json['description'], 'The "username" parameter is required.')
 
-    def test_prompt_to_generate_hash_on_none_found(self):
-        # TODO: Verify test after overhaul, self.simulate_request seems to swallow exceptions so
-        #       it should pass but is failing
-        # with self.assertRaisesRegex(
-        #     expected_regex='A hash does not exist for this username. Run /generate_hash/ first',
-        #     expected_exception=falcon.HTTPBadRequest,
-        # ):
-        #     self.simulate_post(
-        #         self.url,
-        #         body=json.dumps({'username': 'foobar'}),
-        #         **req_params,
-        #     )
-        pass
+    def test_prompt_user_to_generate_hash_when_none_found(self):
+        resp = self.simulate_post(
+            self.url,
+            body=json.dumps({'username': 'foobar'}),
+            **req_params,
+        )
+        self.assertEqual(resp.status_code, 400)
+        self.assertEqual(resp.json['title'], 'Hash Missing')
+        self.assertEqual(
+            resp.json['description'],
+            'A hash does not exist for this username. Run /generate_hash/ first',
+        )
 
     @patch.object(requests.Session, 'get')
     def test_validate_hash_is_in_user_profile(self, mock_get):
