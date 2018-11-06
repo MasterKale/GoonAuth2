@@ -62,7 +62,7 @@ class GenerateHashResource:
             user_hash = helpers.get_hash()
             redis_db.setex(username, HASH_LIFESPAN_MINS * 60, user_hash)
 
-        resp.status = falcon.HTTP_OK
+        resp.status = falcon.HTTP_200
         resp.body = json.dumps({'hash': user_hash})
 
 
@@ -92,7 +92,7 @@ class ValidateUserResource:
         # Do a regex search to find the user's hash in their profile page
         result = re.search(user_hash, raw_profile.text)
 
-        resp.status = falcon.HTTP_OK
+        resp.status = falcon.HTTP_200
         resp.body = json.dumps({'validated': result is not None})
 
 
