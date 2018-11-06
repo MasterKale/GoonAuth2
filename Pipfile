@@ -1,0 +1,29 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[scripts]
+test = "python -m unittest discover -s src/tests"
+test-coverage = "coverage run -m unittest discover -s src/tests"
+test-report = "coverage report"
+test-report-html = "coverage html"
+lint = "flake8"
+start = "gunicorn src.server:app --reload"
+start-prod = "gunicorn src.server:app"
+
+[packages]
+falcon = "*"
+gunicorn = "*"
+python-mimeparse = "*"
+redis = "*"
+requests = "*"
+six = "*"
+
+[dev-packages]
+flake8 = "*"
+flake8-quotes = "*"
+coverage = "*"
+
+[requires]
+python_version = "3.6"
