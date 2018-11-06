@@ -10,6 +10,7 @@ test-report = "coverage report"
 test-report-html = "coverage html"
 lint = "flake8"
 start = "gunicorn src.server:app --reload"
+start-prod = "gunicorn src.server:app"
 
 [packages]
 falcon = "*"
